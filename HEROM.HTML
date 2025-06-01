@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HEROM - Cursos de Brigadas de Emergencia</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f2f5; /* Lighter background for a friendlier feel */
+            color: #333;
+        }
+        .text-herom-red {
+            color: #dc2626; /* Original Red */
+        }
+        .bg-herom-red {
+            background-color: #dc2626; /* Original Red */
+        }
+        .text-herom-blue {
+            color: #2563eb; /* A shade of blue */
+        }
+        .bg-herom-blue {
+            background-color: #2563eb; /* A shade of blue */
+        }
+        .btn-primary {
+            @apply bg-herom-red text-white py-3 px-6 rounded-lg font-semibold hover:bg-red-700 transition duration-300 shadow-lg transform hover:scale-105;
+        }
+        .btn-secondary {
+            @apply bg-herom-blue text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition duration-300 shadow-lg transform hover:scale-105;
+        }
+        .form-input {
+            @apply w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-herom-blue shadow-sm;
+        }
+        .social-icon {
+            @apply text-white hover:text-herom-red transition duration-300 text-3xl transform hover:scale-110;
+        }
+        .whatsapp-button {
+            @apply fixed bottom-8 right-8 bg-green-500 text-white p-4 rounded-full shadow-lg hover:bg-green-600 transition duration-300 z-50 transform hover:scale-110;
+        }
+        /* Custom modal for messages */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1000; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgba(0,0,0,0.6); /* Darker overlay */
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 30px;
+            border-radius: 15px; /* More rounded */
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Stronger shadow */
+            width: 90%;
+            max-width: 550px;
+            text-align: center;
+            position: relative;
+            animation: fadeIn 0.3s ease-out;
+        }
+        .close-button {
+            color: #aaa;
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 32px; /* Larger close button */
+            font-weight: bold;
+        }
+        .close-button:hover,
+        .close-button:focus {
+            color: #333;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+    <header class="bg-white shadow-lg py-6 sticky top-0 z-40">
+        <div class="container mx-auto flex flex-col md:flex-row items-center justify-between px-6">
+            <div class="flex items-center mb-4 md:mb-0">
+                <img src="https://placehold.co/100x100/dc2626/ffffff?text=HEROM" alt="HEROM Logo" class="h-24 w-24 rounded-full mr-4 shadow-md border-4 border-herom-blue p-1">
+                <h1 class="text-5xl font-extrabold text-herom-red tracking-wide">HEROM</h1>
+            </div>
+            <nav>
+                <ul class="flex space-x-6">
+                    <li><a href="#inicio" class="text-gray-700 hover:text-herom-blue font-semibold text-lg transition duration-300">Inicio</a></li>
+                    <li><a href="#nosotros" class="text-gray-700 hover:text-herom-blue font-semibold text-lg transition duration-300">Nosotros</a></li>
+                    <li><a href="#cursos" class="text-gray-700 hover:text-herom-blue font-semibold text-lg transition duration-300">Cursos</a></li>
+                    <li><a href="#inscripcion" class="text-gray-700 hover:text-herom-blue font-semibold text-lg transition duration-300">Inscripción</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="flex-grow container mx-auto p-6 mt-8">
+        <section id="inicio" class="text-center mb-16 p-10 bg-gradient-to-r from-herom-red to-red-500 text-white rounded-xl shadow-xl transform hover:scale-105 transition duration-500">
+            <h2 class="text-5xl font-extrabold mb-4 animate-pulse">Capacitación de Vanguardia en Emergencias</h2>
+            <p class="text-xl leading-relaxed max-w-4xl mx-auto">
+                En HEROM, transformamos vidas a través de la educación y el entrenamiento en seguridad y respuesta a emergencias. ¡Prepárate para ser un héroe!
+            </p>
+            <button onclick="document.getElementById('inscripcion').scrollIntoView({ behavior: 'smooth' });" class="mt-8 btn-secondary bg-white text-herom-blue hover:bg-gray-100">
+                ¡Inscríbete Ahora! <i class="fas fa-arrow-right ml-2"></i>
+            </button>
+        </section>
+
+        <section id="nosotros" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+            <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-herom-blue transform hover:translate-y-2 transition duration-300">
+                <h3 class="text-3xl font-bold text-herom-blue mb-4 text-center">Misión</h3>
+                <p class="text-gray-700 text-lg leading-relaxed">
+                    Nuestra misión es capacitar a individuos y organizaciones con las habilidades y conocimientos esenciales para prevenir, responder y mitigar eficazmente situaciones de emergencia, promoviendo una cultura de seguridad y protección civil.
+                </p>
+            </div>
+            <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-herom-red transform hover:translate-y-2 transition duration-300">
+                <h3 class="text-3xl font-bold text-herom-red mb-4 text-center">Visión</h3>
+                <p class="text-gray-700 text-lg leading-relaxed">
+                    Ser la organización líder a nivel nacional en la formación de brigadas de emergencia y personal de respuesta, reconocida por la excelencia de nuestros programas, la calidad de nuestros instructores y el impacto positivo en la seguridad de la comunidad.
+                </p>
+            </div>
+            <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-herom-blue transform hover:translate-y-2 transition duration-300">
+                <h3 class="text-3xl font-bold text-herom-blue mb-4 text-center">Valores</h3>
+                <ul class="list-none text-gray-700 text-lg leading-relaxed space-y-3">
+                    <li><i class="fas fa-hand-holding-heart text-herom-red mr-3 text-xl"></i><span class="font-semibold">Compromiso con la Vida</span></li>
+                    <li><i class="fas fa-shield-alt text-herom-red mr-3 text-xl"></i><span class="font-semibold">Integridad y Ética</span></li>
+                    <li><i class="fas fa-lightbulb text-herom-red mr-3 text-xl"></i><span class="font-semibold">Innovación Educativa</span></li>
+                    <li><i class="fas fa-users text-herom-red mr-3 text-xl"></i><span class="font-semibold">Trabajo en Equipo</span></li>
+                    <li><i class="fas fa-medal text-herom-red mr-3 text-xl"></i><span class="font-semibold">Excelencia en la Capacitación</span></li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="cursos" class="bg-white p-8 rounded-xl shadow-lg mb-16 border-b-4 border-herom-red">
+            <h3 class="text-4xl font-bold text-herom-red mb-6 text-center">Objetivo de Nuestros Cursos</h3>
+            <p class="text-gray-700 text-lg leading-relaxed text-center max-w-3xl mx-auto">
+                El objetivo principal de nuestros cursos es dotar a los participantes de las competencias teóricas y prácticas necesarias para actuar de manera eficiente y segura ante diversas situaciones de emergencia, minimizando riesgos y salvaguardando vidas y bienes. Nos enfocamos en el desarrollo de habilidades críticas para la toma de decisiones bajo presión y la coordinación efectiva en escenarios reales.
+            </p>
+            <div class="mt-10 grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="flex flex-col items-center text-center p-6 bg-blue-50 rounded-lg shadow-md border border-blue-200 transform hover:scale-105 transition duration-300">
+                    <i class="fas fa-fire-extinguisher text-7xl text-herom-blue mb-4"></i>
+                    <h4 class="text-2xl font-semibold text-gray-800">Combate Contra Incendios</h4>
+                    <p class="text-gray-600 mt-2">Técnicas avanzadas para la prevención y extinción de fuegos, con simulacros prácticos.</p>
+                </div>
+                <div class="flex flex-col items-center text-center p-6 bg-red-50 rounded-lg shadow-md border border-red-200 transform hover:scale-105 transition duration-300">
+                    <i class="fas fa-first-aid text-7xl text-herom-red mb-4"></i>
+                    <h4 class="text-2xl font-semibold text-gray-800">Primeros Auxilios</h4>
+                    <p class="text-gray-600 mt-2">Atención inmediata a lesiones y enfermedades, incluyendo RCP y manejo de heridas.</p>
+                </div>
+                <div class="flex flex-col items-center text-center p-6 bg-blue-50 rounded-lg shadow-md border border-blue-200 transform hover:scale-105 transition duration-300">
+                    <i class="fas fa-people-carry-box text-7xl text-herom-blue mb-4"></i>
+                    <h4 class="text-2xl font-semibold text-gray-800">Brigada de Emergencia</h4>
+                    <p class="text-gray-600 mt-2">Formación integral para la respuesta coordinada en cualquier tipo de emergencia, evacuación y rescate.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="inscripcion" class="bg-white p-8 rounded-xl shadow-xl mb-16 border-t-4 border-herom-blue">
+            <h3 class="text-4xl font-bold text-herom-blue mb-8 text-center">Formulario de Inscripción al Curso</h3>
+            <form id="enrollmentForm" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label for="fullName" class="block text-gray-700 text-lg font-semibold mb-2">Nombre Completo <span class="text-red-500">*</span>:</label>
+                    <input type="text" id="fullName" name="fullName" class="form-input" placeholder="Ej: Juan Pérez" required>
+                </div>
+                <div>
+                    <label for="dob" class="block text-gray-700 text-lg font-semibold mb-2">Fecha de Nacimiento <span class="text-red-500">*</span>:</label>
+                    <input type="date" id="dob" name="dob" class="form-input" required>
+                </div>
+                <div>
+                    <label for="course" class="block text-gray-700 text-lg font-semibold mb-2">Selecciona el curso <span class="text-red-500">*</span>:</label>
+                    <select id="course" name="course" class="form-input" required>
+                        <option value="">-- Selecciona un curso --</option>
+                        <option value="Brigada de Emergencia">Brigada de Emergencia</option>
+                        <option value="Primeros Auxilios">Primeros Auxilios</option>
+                        <option value="Combate Contra Incendios">Combate Contra Incendios</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="modality" class="block text-gray-700 text-lg font-semibold mb-2">Modalidad del Curso <span class="text-red-500">*</span>:</label>
+                    <select id="modality" name="modality" class="form-input" required>
+                        <option value="">-- Selecciona modalidad --</option>
+                        <option value="Presencial">Presencial</option>
+                        <option value="Virtual">Virtual</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="phone" class="block text-gray-700 text-lg font-semibold mb-2">Teléfono (10 dígitos) <span class="text-red-500">*</span>:</label>
+                    <input type="tel" id="phone" name="phone" class="form-input" maxlength="10" pattern="[0-9]{10}" title="Por favor, ingresa 10 dígitos numéricos" placeholder="Ej: 5512345678" required>
+                </div>
+                <div>
+                    <label for="email" class="block text-gray-700 text-lg font-semibold mb-2">Email <span class="text-red-500">*</span>:</label>
+                    <input type="email" id="email" name="email" class="form-input" placeholder="Ej: tu.correo@example.com" required>
+                </div>
+                <div>
+                    <label for="city" class="block text-gray-700 text-lg font-semibold mb-2">Ciudad <span class="text-red-500">*</span>:</label>
+                    <input type="text" id="city" name="city" class="form-input" placeholder="Ej: Guadalajara" required>
+                </div>
+                <div>
+                    <label for="state" class="block text-gray-700 text-lg font-semibold mb-2">Estado de México <span class="text-red-500">*</span>:</label>
+                    <select id="state" name="state" class="form-input" required>
+                        <option value="">-- Selecciona un estado --</option>
+                        </select>
+                </div>
+                <div class="md:col-span-2">
+                    <label for="comments" class="block text-gray-700 text-lg font-semibold mb-2">Comentarios:</label>
+                    <textarea id="comments" name="comments" rows="4" class="form-input" placeholder="Algún comentario adicional o pregunta..."></textarea>
+                </div>
+                <div class="md:col-span-2">
+                    <label for="cvUpload" class="block text-gray-700 text-lg font-semibold mb-2">Adjuntar CV (PDF, DOC, DOCX) <span class="text-red-500">*</span>:</label>
+                    <input type="file" id="cvUpload" name="cvUpload" accept=".pdf,.doc,.docx" class="form-input p-2" required>
+                </div>
+                <div class="md:col-span-2 flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4 mt-6">
+                    <button type="submit" class="btn-primary" id="generateInscriptionBtn">
+                        <i class="fas fa-user-plus mr-2"></i>Generar Inscripción
+                    </button>
+                    <button type="button" class="btn-secondary" id="exportPdfBtn">
+                        <i class="fas fa-file-pdf mr-2"></i>Exportar Recibo en PDF
+                    </button>
+                </div>
+            </form>
+        </section>
+    </main>
+
+    <footer class="bg-gray-900 text-white py-8 mt-auto">
+        <div class="container mx-auto flex flex-col items-center justify-center px-6">
+            <div class="flex space-x-6 mb-6">
+                <a href="https://facebook.com/herom" target="_blank" class="social-icon">
+                    <i class="fab fa-facebook-f"></i>
+                </a>
+                <a href="https://instagram.com/herom" target="_blank" class="social-icon">
+                    <i class="fab fa-instagram"></i>
+                </a>
+                <a href="https://tiktok.com/@herom" target="_blank" class="social-icon">
+                    <i class="fab fa-tiktok"></i>
+                </a>
+                <a href="https://linkedin.com/company/herom" target="_blank" class="social-icon">
+                    <i class="fab fa-linkedin-in"></i>
+                </a>
+            </div>
+            <p class="text-gray-400 text-center">&copy; 2025 HEROM. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <a href="https://wa.me/521234567890?text=Hola%20HEROM,%20me%20interesa%20un%20curso." target="_blank" class="whatsapp-button">
+        <i class="fab fa-whatsapp text-4xl"></i>
+    </a>
+
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <p id="modalMessage" class="text-2xl font-bold text-gray-800 mb-6"></p>
+            <button id="modalOkBtn" class="btn-secondary">Aceptar</button>
+        </div>
+    </div>
+
+    <script>
+        // Array of Mexican states
+        const mexicanStates = [
+            "Aguascalientes", "Baja California", "Baja California Sur", "Campeche", "Chiapas", "Chihuahua",
+            "Coahuila de Zaragoza", "Colima", "Ciudad de México", "Durango", "Guanajuato", "Guerrero",
+            "Hidalgo", "Jalisco", "México", "Michoacán de Ocampo", "Morelos", "Nayarit", "Nuevo León",
+            "Oaxaca", "Puebla", "Querétaro", "Quintana Roo", "San Luis Potosí", "Sinaloa", "Sonora",
+            "Tabasco", "Tamaulipas", "Tlaxcala", "Veracruz de Ignacio de la Llave", "Yucatán", "Zacatecas"
+        ].sort(); // Sort alphabetically
+
+        // Get elements
+        const stateSelect = document.getElementById('state');
+        const enrollmentForm = document.getElementById('enrollmentForm');
+        const generateInscriptionBtn = document.getElementById('generateInscriptionBtn');
+        const exportPdfBtn = document.getElementById('exportPdfBtn');
+        const phoneInput = document.getElementById('phone');
+        const cvUploadInput = document.getElementById('cvUpload'); // New CV input
+
+        // Modal elements
+        const modal = document.getElementById('myModal');
+        const modalMessage = document.getElementById('modalMessage');
+        const closeButton = document.querySelector('.close-button');
+        const modalOkBtn = document.getElementById('modalOkBtn');
+
+        // Function to show custom modal
+        function showModal(message) {
+            modalMessage.textContent = message;
+            modal.style.display = 'flex'; // Use flex to center content
+        }
+
+        // Function to hide custom modal
+        function hideModal() {
+            modal.style.display = 'none';
+        }
+
+        // Close modal when close button or OK button is clicked
+        closeButton.onclick = hideModal;
+        modalOkBtn.onclick = hideModal;
+
+        // Close modal when clicking outside of the modal content
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                hideModal();
+            }
+        };
+
+        // Populate Mexican states dropdown
+        function populateStates() {
+            mexicanStates.forEach(state => {
+                const option = document.createElement('option');
+                option.value = state;
+                option.textContent = state;
+                stateSelect.appendChild(option);
+            });
+        }
+
+        // Event listener for phone input to restrict to 10 digits
+        phoneInput.addEventListener('input', function() {
+            // Remove non-numeric characters
+            this.value = this.value.replace(/\D/g, '');
+            // Truncate to 10 digits if more are entered
+            if (this.value.length > 10) {
+                this.value = this.value.slice(0, 10);
+            }
+        });
+
+        // Handle form submission
+        enrollmentForm.addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent default form submission
+
+            // Check if all required fields are filled (browser's native validation handles most, but good to double-check)
+            if (!enrollmentForm.checkValidity()) {
+                showModal("Por favor, rellena todos los campos obligatorios marcados con (*).");
+                return;
+            }
+
+            // Specific validation for phone number length
+            if (phoneInput.value.length !== 10) {
+                showModal("El número de teléfono debe tener exactamente 10 dígitos.");
+                return;
+            }
+
+            // Display success message
+            showModal("¡Se ha inscrito correctamente!");
+
+            // Clear the form
+            enrollmentForm.reset();
+        });
+
+        // Handle PDF export
+        exportPdfBtn.addEventListener('click', function() {
+            const form = enrollmentForm;
+            const fullName = form.fullName.value;
+            const dob = form.dob.value;
+            const course = form.course.value;
+            const modality = form.modality.value;
+            const phone = form.phone.value;
+            const email = form.email.value;
+            const city = form.city.value;
+            const state = form.state.value;
+            const comments = form.comments.value;
+            const cvFile = cvUploadInput.files[0] ? cvUploadInput.files[0].name : "No adjuntado"; // Get CV filename
+
+            // Check if all required fields are filled for PDF generation
+            if (!fullName || !dob || !course || !modality || !phone || !email || !city || !state || !cvUploadInput.files[0]) {
+                showModal("Por favor, rellena todos los campos obligatorios del formulario, incluyendo el CV, antes de exportar el recibo.");
+                return;
+            }
+
+            // Create a new jsPDF instance
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+
+            // Set font and size
+            doc.setFont("helvetica");
+            doc.setFontSize(26);
+            doc.setTextColor(220, 38, 38); // HEROM Red
+
+            // Add title
+            doc.text("Recibo de Inscripción HEROM", 105, 25, null, null, "center");
+
+            doc.setFontSize(14);
+            doc.setTextColor(51, 51, 51); // Dark gray
+
+            let y = 50; // Starting Y position for content
+
+            const addField = (label, value) => {
+                doc.setFontSize(12);
+                doc.setFont("helvetica", "bold");
+                doc.text(`${label}:`, 20, y);
+                doc.setFont("helvetica", "normal");
+                doc.text(value, 70, y); // Adjusted X for value to align better
+                y += 10;
+            };
+
+            addField("Nombre Completo", fullName);
+            addField("Fecha de Nacimiento", dob);
+            addField("Curso", course);
+            addField("Modalidad", modality);
+            addField("Teléfono", phone);
+            addField("Email", email);
+            addField("Ciudad", city);
+            addField("Estado", state);
+            if (comments) {
+                addField("Comentarios", comments);
+            }
+            addField("CV Adjunto", cvFile); // Add CV field to PDF
+
+            // Add a footer
+            doc.setFontSize(10);
+            doc.setTextColor(150, 150, 150);
+            doc.text("Gracias por inscribirte en HEROM. ¡Te esperamos!", 105, doc.internal.pageSize.height - 20, null, null, "center");
+
+            // Save the PDF
+            doc.save(`Recibo_Inscripcion_HEROM_${fullName.replace(/\s/g, '_')}.pdf`);
+        });
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            populateStates();
+        });
+    </script>
+</body>
+</html>
